@@ -15,11 +15,16 @@ Repo shows a sample route configured and hooked into express server
 
 ### Start Server 
 
-This repo uses `nodemon` to monitor express server 
+This repo uses `nodemon` to monitor express server. Don't forget to install dependencies :) 
 
 ```
+# after git clone :)
+npm install
+
+# run serer 
 nodemon server.js
 ```
+
 
 Output of the command above looks as below.
 
