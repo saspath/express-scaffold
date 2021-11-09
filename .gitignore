@@ -1,0 +1,27 @@
+# OS X
+.DS_Store*
+Icon?
+._*
+
+node_modules/
+logs
+*.log
+npm-debug.log*
+
+# runtime data 
+pids 
+*.pid 
+*.seed 
+*.pid.lock 
+
+# build 
+build/Release 
+
+.npm 
+.eslintcache 
+
+# env files 
+.env.local 
+.env.development
+.env.test 
+.env.production
