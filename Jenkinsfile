@@ -11,6 +11,8 @@ pipeline {
         }      
         stage('Build') {
             steps {
+                sh 'sudo apt update'
+                sh 'sudo apt install nodejs npm'
                 sh 'npm install'
             }
         }
