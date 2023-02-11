@@ -1,14 +1,14 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
-        }
-    }
+    agent any
     environment {
         CI = 'true'
     }
     stages {
+        stage ('Checkout') {
+            steps {
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/saspath/myPythonDockerRepo']])
+            }
+        }      
         stage('Build') {
             steps {
                 sh 'npm install'
