@@ -1,33 +1,49 @@
 pipeline {
+    
     agent any
+    
     environment {
-        CI = 'true'
+        registry = "802165080994.dkr.ecr.us-east-1.amazonaws.com/mydockerrepo"
     }
+    
+    //This Code gets the code from Git Repo
     stages {
         stage ('Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/saspath/myPythonDockerRepo']])
-            }
-        }      
-        stage('Build') {
-            steps {
-                sh 'apt update'
-                sh 'apt install nodejs npm'
-                sh 'npm install'
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/saspath/express-scaffold']])
             }
         }
-        stage('Test') {
+        //This code will build the image
+        stage ('Docker Build') {
             steps {
-              echo 'Testing Node JS application...'
-                //sh './jenkins/scripts/test.sh'
+                script {
+                    dockerImage = docker.build registry
+                }
             }
         }
-        //stage('Deliver') {
-        //    steps {
-        //        sh './jenkins/scripts/deliver.sh'
-        //        input message: 'Finished using the web site? (Click "Proceed" to continue)'
-        //        sh './jenkins/scripts/kill.sh'
-        //    }
-        //}
+        //This code pushes the image to AWS-ECR
+        stage ('Docker Push') {
+            steps {
+                script {
+                    sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 802165080994.dkr.ecr.us-east-1.amazonaws.com'
+                    sh 'docker push 802165080994.dkr.ecr.us-east-1.amazonaws.com/mydockerrepo:latest'
+                }
+            }
+        }
+        //Stopping Docker containers for cleaner Docker run
+        stage ('stop previous containers') {
+            steps {
+                sh 'docker ps -f name=myNodejsContainer -q | xargs --no-run-if-empty docker container stop'
+                sh 'docker container ls -a -fname=myNodejsContainer -q | xargs -r docker container rm'
+            }
+        }
+        //This will run the Docker container
+        stage ('Docker Run') {
+            steps {
+                script {
+                    sh 'docker run -d -p 8098:5000 --rm --name myNodejsContainer 802165080994.dkr.ecr.us-east-1.amazonaws.com/mydockerrepo:latest'
+                }
+            }   
+        }
     }
 }
