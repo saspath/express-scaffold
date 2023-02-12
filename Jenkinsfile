@@ -43,7 +43,7 @@ pipeline {
         stage ('Docker Run') {
             steps {
                 script {
-                    sh 'docker run -d -p 8098:5000 --rm --name myNodejsContainer 802165080994.dkr.ecr.us-east-1.amazonaws.com/mydockerrepo:latest'
+                    sh 'docker run -d -p 8098:5000 --rm --name myNodejsContainer -v $(which docker):/usr/bin/docker 802165080994.dkr.ecr.us-east-1.amazonaws.com/mydockerrepo:latest'
                 }
             }   
         }
