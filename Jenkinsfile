@@ -2,13 +2,28 @@ pipeline {
     
     agent { dockerfile true }
     
-    environment {
-        registry = "068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo"
-    }
+    //environment {
+    //    registry = "068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo"
+    //}
     stages {
+        //Loading variables
+        stage('Load Variables') {
+            steps {
+                script {
+                    //make sure that file exists on this node
+                    def constants = load 'Variables'
+                    registry = constants.registryECR
+                    branch = constants.branchName
+                    gitURL = constants.gitURL
+                    echo branch
+                    echo registry
+                    echo gitURL
+                }
+            }
+        }
         stage ('Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/saspath/express-scaffold']])
+                checkout scmGit(branches: [[name: branch]], extensions: [], userRemoteConfigs: [[url: gitURL]])
             }
         }
         stage ('Docker Image Build') {
