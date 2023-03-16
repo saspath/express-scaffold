@@ -7,10 +7,19 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 
-# trying to install docker 
-# RUN yum update -y
-# RUN yum install -y curl
-# RUN curl https://get.docker.com/builds/Linux/x86_64/docker-latest.tgz | tar xvz -C /tmp/ && mv /tmp/docker/docker /usr/bin/docker
+# trying to install aws cli 
+RUN apt-get update && \
+    apt-get install -y \
+        python3 \
+        python3-pip \
+        python3-setuptools \
+        groff \
+        less \
+    && pip3 install --upgrade pip \
+    && apt-get clean
+
+RUN pip3 --no-cache-dir install --upgrade awscli
+
 
 # If you are building your code for production
 # RUN npm ci --only=production
