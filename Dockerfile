@@ -20,6 +20,9 @@ RUN apt-get update && \
 
 RUN pip3 --no-cache-dir install --upgrade awscli
 
+RUN mkdir /etc/ansible/ /ansible
+RUN echo "[local]" >> /etc/ansible/hosts && \
+    echo "localhost" >> /etc/ansible/hosts
 
 RUN apt-get update && apt-get install -y \
     git \
