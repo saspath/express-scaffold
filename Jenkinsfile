@@ -30,6 +30,8 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build registry
+                    echo dockerImage 
+                    echo dockerImage.ImageID
                 }
             }
         }
