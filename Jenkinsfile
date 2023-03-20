@@ -29,8 +29,7 @@ pipeline {
         stage ('Docker Image Build') {
             steps {
                 script {
-                    dockerImage = docker.build registry
-                    echo dockerImage.ImageName 
+                    dockerImage = docker.build registry 
                     echo dockerImage.ImageID
                 }
             }
