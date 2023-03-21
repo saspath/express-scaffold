@@ -30,8 +30,8 @@ pipeline {
         stage ('Docker Image Build') {
             steps {
                 script {
-                    dockerImage = docker.build registry
-                    imageId = dockerImage.getImageId()
+                    def dockerImage = docker.build registry
+                    def imageId = dockerImage.getImageId()
                     sh "echo $imageId" // prints the image ID to the console
                 }
             }
