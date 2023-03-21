@@ -31,9 +31,8 @@ pipeline {
             steps {
                 script {
                     def dockerImage = docker.build registry
-                    def imageId = dockerImage.getImageName()
-                    sh "echo $imageId" // prints the image ID to the console
-                }
+                    def imageId = sh(returnStdout: true, script: "docker inspect -f '{{.Id}}' ${image.imageNameWithTag}").trim()
+                    echo "Docker image ID: ${imageId}"                }
             }
         }
         //This code pushes the image to AWS ECR
