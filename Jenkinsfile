@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     def dockerImage = docker.build registry
-                    def imageId = dockerImage.getImageId()
+                    def imageId = dockerImage.getImageName()
                     sh "echo $imageId" // prints the image ID to the console
                 }
             }
