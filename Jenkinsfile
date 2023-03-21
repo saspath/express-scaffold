@@ -33,6 +33,9 @@ pipeline {
                     dockerImage = docker.build registry
                     def imageID = sh(returnStdout: true, script: "docker inspect -f '{{.ID}}' ${registry}").trim()
                     echo "Image-ID: ${imageID}"
+                    def mySubstring = imageID.split(':')[1]
+                    def first12Chars = mySubstring.substring(0, Math.min(mySubstring.length(), 12))
+                    echo "shortImage-ID: ${first12Chars}"
                 }
             }
         }
