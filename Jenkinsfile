@@ -2,10 +2,10 @@ pipeline {
     
     agent { dockerfile true }
     
-    environment {
+    //environment {
     //    registry = "068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo"
     //    imageId =''
-    }
+    //}
     stages {
         //Loading variables
         stage('Load Variables') {
