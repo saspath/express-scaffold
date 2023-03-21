@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     def dockerImage = docker.build registry
-                    def imageId = sh(returnStdout: true, script: "docker inspect -f '{{.Id}}' ${image.imageNameWithTag}").trim()
+                    def imageId = sh(returnStdout: true, script: "docker inspect -f '{{.Id}}' ${dockerImage.imageNameWithTag}").trim()
                     echo "Docker image ID: ${imageId}"                }
             }
         }
