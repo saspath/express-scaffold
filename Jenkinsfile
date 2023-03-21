@@ -31,6 +31,7 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build registry
+                    echo dockerImage.id
                     def imageID = sh(returnStdout: true, script: "docker inspect -f '{{.ID}}' ${registry}").trim()
                     echo "Image-ID: ${imageID}"
                     def mySubstring = imageID.split(':')[1]
