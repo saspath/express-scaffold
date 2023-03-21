@@ -34,8 +34,8 @@ pipeline {
                     def imageID = sh(returnStdout: true, script: "docker inspect -f '{{.ID}}' ${registry}").trim()
                     echo "Image-ID: ${imageID}"
                     def mySubstring = imageID.split(':')[1]
-                    def first12Chars = mySubstring.substring(0, Math.min(mySubstring.length(), 12))
-                    echo "shortImage-ID: ${first12Chars}"
+                    def shortImageID = mySubstring.substring(0, Math.min(mySubstring.length(), 12))
+                    echo "first12Chars of Image-ID: ${shortImageID}"
                 }
             }
         }
@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 068643504245.dkr.ecr.us-east-1.amazonaws.com'
-                    sh 'docker push 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest'
+                    sh 'docker push 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:${shortImageID}'
                 }
             }
         }
@@ -59,7 +59,7 @@ pipeline {
         stage ('Docker Run') {
             steps {
                 script {
-                    sh 'docker run -d -p 3000:3000 --rm --name mynodeContainer 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest'
+                    sh 'docker run -d -p 3000:3000 --rm --name mynodeContainer 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:${shortImageID}'
                 }
             }
         }
