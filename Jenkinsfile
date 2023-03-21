@@ -2,10 +2,10 @@ pipeline {
     
     agent { dockerfile true }
     
-    //environment {
+    environment {
     //    registry = "068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo"
-    //    imageId =''
-    //}
+        shortImageID =""
+    }
     stages {
         //Loading variables
         stage('Load Variables') {
@@ -44,6 +44,7 @@ pipeline {
             steps {
                 script {
                     sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 068643504245.dkr.ecr.us-east-1.amazonaws.com'
+                    echo "again - first12Chars of Image-ID: ${shortImageID}"
                     sh 'docker push 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:${shortImageID}'
                 }
             }
