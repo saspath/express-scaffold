@@ -32,7 +32,7 @@ pipeline {
                 script {
                     dockerImage = docker.build registry
                     def imageID = dockerImage.id
-                    echo "ImageID: " imageID
+                    echo "ImageID: $imageID"
                 }
             }
         }
