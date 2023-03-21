@@ -2,9 +2,10 @@ pipeline {
     
     agent { dockerfile true }
     
-    //environment {
+    environment {
     //    registry = "068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo"
-    //}
+        imageId =''
+    }
     stages {
         //Loading variables
         stage('Load Variables') {
@@ -29,8 +30,9 @@ pipeline {
         stage ('Docker Image Build') {
             steps {
                 script {
-                    dockerImage = docker.build registry 
-                    echo dockerImage.ImageID
+                    dockerImage = docker.build registry
+                    imageId = dockerImage.getImageId()
+                    echo imageId
                 }
             }
         }
