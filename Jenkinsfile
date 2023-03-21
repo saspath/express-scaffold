@@ -30,7 +30,9 @@ pipeline {
         stage ('Docker Image Build') {
             steps {
                 script {
-                    dockerImage = docker.build registry               
+                    dockerImage = docker.build registry
+                    def imageID = dockerImage.id
+                    echo imageID
                 }
             }
         }
