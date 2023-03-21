@@ -45,7 +45,8 @@ pipeline {
                 script {
                     sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 068643504245.dkr.ecr.us-east-1.amazonaws.com'
                     echo "again - first12Chars of Image-ID: ${shortImageID}"
-                    sh "docker push 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:${shortImageID}"
+                    sh "docker push 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
+                    sh "docker tag ${shortImageID} 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
                 }
             }
         }
@@ -60,7 +61,7 @@ pipeline {
         stage ('Docker Run') {
             steps {
                 script {
-                    sh "docker run -d -p 3000:3000 --rm --name mynodeContainer 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:${shortImageID}"
+                    sh "docker run -d -p 3000:3000 --rm --name mynodeContainer 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
                 }
             }
         }
