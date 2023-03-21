@@ -4,7 +4,7 @@ pipeline {
     
     environment {
     //    registry = "068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo"
-        imageId =''
+    //    imageId =''
     }
     stages {
         //Loading variables
@@ -31,8 +31,8 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build registry
-                    imageId = dockerImage.getImageId()
-                    echo imageId
+                    def imageId = dockerImage.getImageId()
+                    sh "echo $imageId" // prints the image ID to the console
                 }
             }
         }
