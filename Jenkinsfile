@@ -14,6 +14,7 @@ pipeline {
                     //make sure that file exists on this node
                     def constants = load 'Variables'
                     registry = constants.registryECR
+                    awsRegion = constants.awsRegion
                     branch = constants.branchName
                     gitURL = constants.gitURL
                     echo branch
@@ -43,7 +44,15 @@ pipeline {
         stage ('Docker Push') {
             steps {
                 script {
-                    sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 068643504245.dkr.ecr.us-east-1.amazonaws.com'
+                    sh "aws ecr get-login-password --region $awsRegion | docker login --username AWS --password-stdin $registry"
+                    
+                    def sha_id = sh(
+                        script: "git rev-parse --short HEAD",
+                        returnStdout: true
+                    ).trim()
+                    
+                    echo "sha_ID : $sha_id"
+                    
                     echo "again - first12Chars of Image-ID: ${shortImageID}"
                     sh "docker tag ${shortImageID} 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
                     sh "docker push 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
