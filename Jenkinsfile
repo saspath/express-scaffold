@@ -31,7 +31,14 @@ pipeline {
         stage ('Docker Image Build') {
             steps {
                 script {
-                    dockerImage = docker.build registry
+                    
+                    def sha_id = sh(
+                        script: "git rev-parse --short HEAD",
+                        returnStdout: true
+                    ).trim()
+                    image_name = "$registry:$sha_id"
+                    echo "image_name: $image_name"
+                    dockerImage = docker.build image_name
                     def imageID = sh(returnStdout: true, script: "docker inspect -f '{{.ID}}' ${registry}").trim()
                     echo "Image-ID: ${imageID}"
                     def mySubstring = imageID.split(':')[1]
@@ -54,8 +61,8 @@ pipeline {
                     echo "sha_ID : $sha_id"
                     
                     echo "again - first12Chars of Image-ID: ${shortImageID}"
-                    sh "docker tag ${shortImageID} 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
-                    sh "docker push 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
+                    //sh "docker tag ${shortImageID} 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
+                    sh "docker push $image_name"
                     echo "again & again - first12Chars of Image-ID: ${shortImageID}"
                 }
             }
@@ -71,7 +78,7 @@ pipeline {
         stage ('Docker Run') {
             steps {
                 script {
-                    sh "docker run -d -p 3000:3000 --rm --name mynodeContainer 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
+                    sh "docker run -d -p 3000:3000 --rm --name mynodeContainer $image_name"
                 }
             }
         }
