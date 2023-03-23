@@ -4,7 +4,6 @@ pipeline {
     
     //environment {
     //    registry = "068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo"
-    //    shortImageID =""
     //}
     stages {
         //Loading variables
@@ -17,9 +16,6 @@ pipeline {
                     awsRegion = constants.awsRegion
                     branch = constants.branchName
                     gitURL = constants.gitURL
-                    echo branch
-                    echo registry
-                    echo gitURL
                 }
             }
         }
@@ -31,19 +27,13 @@ pipeline {
         stage ('Docker Image Build') {
             steps {
                 script {
-                    
+                    //Getting shaId for image and using it in PUSH to ECR
                     def sha_id = sh(
                         script: "git rev-parse --short HEAD",
                         returnStdout: true
                     ).trim()
                     image_name = "$registry:$sha_id"
-                    echo "image_name: $image_name"
                     dockerImage = docker.build image_name
-                    def imageID = sh(returnStdout: true, script: "docker inspect -f '{{.ID}}' ${registry}").trim()
-                    echo "Image-ID: ${imageID}"
-                    def mySubstring = imageID.split(':')[1]
-                    shortImageID = mySubstring.substring(0, Math.min(mySubstring.length(), 12))
-                    echo "first12Chars of Image-ID: ${shortImageID}"
                 }
             }
         }
@@ -51,19 +41,8 @@ pipeline {
         stage ('Docker Push') {
             steps {
                 script {
-                    sh "aws ecr get-login-password --region $awsRegion | docker login --username AWS --password-stdin $registry"
-                    
-                    def sha_id = sh(
-                        script: "git rev-parse --short HEAD",
-                        returnStdout: true
-                    ).trim()
-                    
-                    echo "sha_ID : $sha_id"
-                    
-                    echo "again - first12Chars of Image-ID: ${shortImageID}"
-                    //sh "docker tag ${shortImageID} 068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo:latest"
+                    sh "aws ecr get-login-password --region $awsRegion | docker login --username AWS --password-stdin $registry"                    
                     sh "docker push $image_name"
-                    echo "again & again - first12Chars of Image-ID: ${shortImageID}"
                 }
             }
         }
