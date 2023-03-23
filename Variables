@@ -6,5 +6,7 @@ def registryECR = '068643504245.dkr.ecr.us-east-1.amazonaws.com/express-repo'
 def branchName = '*/master'
 @Field
 def gitURL = 'https://github.com/saspath/express-scaffold'
+@Field
+def awsRegion = 'us-east-1'
 
 return this;
