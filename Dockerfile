@@ -5,7 +5,7 @@ RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install --no-install-recommends --assume-yes \
       docker.io
-USER jenkins
+USER jenkins jenkins
 
 # Create app directory
 WORKDIR /usr/src/app
