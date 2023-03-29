@@ -1,4 +1,12 @@
 FROM node:19-bullseye
+
+USER root
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive \
+    apt-get install --no-install-recommends --assume-yes \
+      docker.io
+USER jenkins
+
 # Create app directory
 WORKDIR /usr/src/app
 # Install app dependencies
